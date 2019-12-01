@@ -1,9 +1,14 @@
-package SpringMVC.Twitter.Tweets;
+package SpringMVC.Twitter.TweetService;
 
-import SpringMVC.Twitter.TweetsActions.TweetActions;
-import SpringMVC.Twitter.TweetsActions.TweetActionsRepository;
+import SpringMVC.Twitter.TweetService.Models.Tweet;
+import SpringMVC.Twitter.TweetService.Repositories.CommentsRepository;
+import SpringMVC.Twitter.TweetService.Repositories.LikesRepository;
+import SpringMVC.Twitter.TweetService.Repositories.TweetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Optional;
 
 @RestController
@@ -12,26 +17,25 @@ public class TweetsController {
     @Autowired
     TweetRepository tweetRepository;
     @Autowired
-    TweetActionsRepository tweetActionsRepository;
+    LikesRepository likesRepository;
+    @Autowired
+    CommentsRepository commentsRepository;
 
     @RequestMapping("/tweets")
-    public Iterable<Tweet> getAllTweets() {
-        return tweetRepository.findAll();
+    public List<Tweet> getAllTweets() {
+        List<Tweet> list = new ArrayList<>();
+        tweetRepository.findAll().forEach(tweet -> list.add(tweet));
+        return list;
     }
 
     @RequestMapping("tweets/{id}")
-    public Optional<Tweet> getTweet(@PathVariable long id) {
+    public Tweet getTweet(@PathVariable long id) {
         return tweetRepository.findById(id);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/tweets")
     public boolean addTweet(@RequestBody Tweet tweet) {
         Tweet t = new Tweet(tweet.getTitle(), tweet.getContent());
-        TweetActions tweetAction = new TweetActions();
-
-        t.setTweetAction(tweetAction);
-        tweetAction.setTweetsContent(t);
-
         t = tweetRepository.save(t);
 
         if (t != null)
@@ -42,11 +46,11 @@ public class TweetsController {
 
     @RequestMapping(method = RequestMethod.PUT, value = "/tweets/{id}")
     public boolean updateTweet(@RequestBody Tweet tweet, @PathVariable long id) {
-        Optional<Tweet> t = tweetRepository.findById(id);
-        if(t.isPresent()) {
-            t.get().setTitle(tweet.getTitle());
-            t.get().setContent(tweet.getContent());
-            tweetRepository.save(t.get());
+        Tweet t = tweetRepository.findById(id);
+        if(t != null) {
+            t.setTitle(tweet.getTitle());
+            t.setContent(tweet.getContent());
+            tweetRepository.save(t);
             return true;
         } else
             return false;
