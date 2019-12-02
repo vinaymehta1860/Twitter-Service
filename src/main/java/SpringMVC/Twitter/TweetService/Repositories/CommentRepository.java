@@ -1,8 +1,8 @@
 package SpringMVC.Twitter.TweetService.Repositories;
 
-import SpringMVC.Twitter.TweetService.Models.Likes;
+import SpringMVC.Twitter.TweetService.Models.Comment;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface LikesRepository extends CrudRepository<Likes, Long> { }
+public interface CommentRepository extends CrudRepository<Comment, Long> { }

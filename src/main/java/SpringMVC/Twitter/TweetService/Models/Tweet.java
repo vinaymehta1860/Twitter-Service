@@ -1,6 +1,8 @@
 package SpringMVC.Twitter.TweetService.Models;
 
 import SpringMVC.Twitter.UserService.Models.User;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -11,24 +13,23 @@ import java.util.Date;
 @Table(name = "tweets")
 public class Tweet implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "tweet", cascade = CascadeType.ALL)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
-    @MapsId
-    private long user;
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private User user;
 
     private String title, content;
 
     @NotNull
-    @Column(name = "date_posted")
+    @Column(name = "date_created")
     private Date date;
 
     public Tweet() {}
 
-    public Tweet(String title, String content, long user) {
+    public Tweet(String title, String content, User user) {
         this.setTitle(title);
         this.setContent(content);
         this.setDate();
@@ -67,7 +68,7 @@ public class Tweet implements Serializable {
         return this.date;
     }
 
-    public void setUser(long user) { this.user = user; }
+    public void setUser(User user) { this.user = user; }
 
-    public long getUser() { return user; }
+    public User getUser() { return user; }
 }

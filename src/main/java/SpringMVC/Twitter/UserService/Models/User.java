@@ -2,13 +2,14 @@ package SpringMVC.Twitter.UserService.Models;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.util.Date;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @NotNull
@@ -22,6 +23,10 @@ public class User {
     @NotNull
     @Column(unique = true)
     private String email;
+
+    @NotNull
+    @Column(name = "date_created")
+    private Date date;
 
     public User() { }
 
@@ -61,5 +66,13 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 }

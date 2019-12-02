@@ -7,19 +7,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-public class Controller {
+public class UserController {
 
     @Autowired
     UserRepository userRepository;
 
-    @RequestMapping("/users")
+    @RequestMapping("/tweets/users")
     public List<User> getUsers() {
         List<User> list = new ArrayList();
         userRepository.findAll().forEach(user -> list.add(user));
         return list;
     }
 
-    @RequestMapping("/users/{id}")
+    @RequestMapping("/tweets/users/{id}")
     public User getUser(@PathVariable long id) {
         User user = userRepository.findById(id);
         if(user != null)
@@ -28,7 +28,7 @@ public class Controller {
             return null;
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/users")
+    @RequestMapping(method = RequestMethod.POST, value = "/tweets/users")
     public boolean generateUser(@RequestBody User user) {
         if(!userRepository.existsByEmail(user.getEmail())) {
             User u = new User(user.getFirstname(), user.getLastname(), user.getEmail());

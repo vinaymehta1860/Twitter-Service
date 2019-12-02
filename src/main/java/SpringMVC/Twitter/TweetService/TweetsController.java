@@ -1,15 +1,15 @@
 package SpringMVC.Twitter.TweetService;
 
 import SpringMVC.Twitter.TweetService.Models.Tweet;
-import SpringMVC.Twitter.TweetService.Repositories.CommentsRepository;
-import SpringMVC.Twitter.TweetService.Repositories.LikesRepository;
+import SpringMVC.Twitter.UserService.Models.User;
+import SpringMVC.Twitter.TweetService.Repositories.CommentRepository;
+import SpringMVC.Twitter.TweetService.Repositories.LikeRepository;
 import SpringMVC.Twitter.TweetService.Repositories.TweetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Optional;
 
 @RestController
 public class TweetsController {
@@ -17,9 +17,9 @@ public class TweetsController {
     @Autowired
     TweetRepository tweetRepository;
     @Autowired
-    LikesRepository likesRepository;
+    LikeRepository likesRepository;
     @Autowired
-    CommentsRepository commentsRepository;
+    CommentRepository commentsRepository;
 
     @RequestMapping("/tweets")
     public List<Tweet> getAllTweets() {
@@ -34,8 +34,8 @@ public class TweetsController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/tweets")
-    public boolean addTweet(@RequestBody Tweet tweet) {
-        Tweet t = new Tweet(tweet.getTitle(), tweet.getContent());
+    public boolean addTweet(@RequestBody Tweet tweet, @RequestBody User user) {
+        Tweet t = new Tweet(tweet.getTitle(), tweet.getContent(), user);
         t = tweetRepository.save(t);
 
         if (t != null)
