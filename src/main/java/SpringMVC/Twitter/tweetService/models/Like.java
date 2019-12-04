@@ -1,6 +1,7 @@
-package SpringMVC.Twitter.TweetService.Models;
+package SpringMVC.Twitter.tweetService.models;
 
-import SpringMVC.Twitter.UserService.Models.User;
+import SpringMVC.Twitter.userService.models.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -17,11 +18,13 @@ public class Like implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "tweet_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
     private Tweet tweet;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
     private User user;
 
     public Like() {}

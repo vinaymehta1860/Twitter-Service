@@ -1,6 +1,7 @@
-package SpringMVC.Twitter.TweetService.Models;
+package SpringMVC.Twitter.tweetService.models;
 
-import SpringMVC.Twitter.UserService.Models.User;
+import SpringMVC.Twitter.userService.models.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -14,11 +15,12 @@ import java.util.Date;
 public class Tweet implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "owner_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
     private User user;
 
     private String title, content;

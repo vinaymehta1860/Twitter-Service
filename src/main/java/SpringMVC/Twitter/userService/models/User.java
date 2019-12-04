@@ -1,4 +1,4 @@
-package SpringMVC.Twitter.UserService.Models;
+package SpringMVC.Twitter.userService.models;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -31,9 +31,10 @@ public class User implements Serializable {
     public User() { }
 
     public User(String firstname, String lastname, String email) {
-        this.firstname = firstname;
-        this.lastname = lastname;
-        this.email = email;
+        this.setFirstname(firstname);
+        this.setLastname(lastname);
+        this.setEmail(email);
+        this.setDate();
     }
 
     public long getId() {
@@ -72,7 +73,7 @@ public class User implements Serializable {
         return date;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setDate() {
+        this.date = new Date();
     }
 }
