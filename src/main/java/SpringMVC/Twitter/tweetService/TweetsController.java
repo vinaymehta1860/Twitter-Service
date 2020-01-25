@@ -1,23 +1,21 @@
 package SpringMVC.Twitter.tweetService;
 
 import SpringMVC.Twitter.tweetService.models.Tweet;
-import SpringMVC.Twitter.tweetService.repositories.CommentRepository;
-import SpringMVC.Twitter.tweetService.repositories.LikeRepository;
-import SpringMVC.Twitter.tweetService.repositories.TweetRepository;
 import SpringMVC.Twitter.tweetService.services.CommentService;
 import SpringMVC.Twitter.tweetService.services.LikeService;
 import SpringMVC.Twitter.tweetService.services.TweetService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.List;
-import java.util.ArrayList;
 
 @RestController
 public class TweetsController {
 
-    @Autowired
-    TweetRepository tweetRepository;
     @Autowired
     TweetService tweetService;
     @Autowired

@@ -1,3 +1,11 @@
+/*
+This is a User object. It has 5 properties
+1) id          <long>      unique identifier of user
+2) firstname   <String>    first name of user
+3) lastname    <String>    last name of user
+4) email       <String>    email of user
+5) date        <Date>      date when user was created
+ */
 package SpringMVC.Twitter.userService.models;
 
 import javax.persistence.*;

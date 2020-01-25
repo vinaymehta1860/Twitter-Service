@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TweetService {
@@ -21,6 +22,10 @@ public class TweetService {
         List<Tweet> tweets = new ArrayList<>();
         tweetRepository.findAll().forEach(tweet -> tweets.add(tweet));
         return tweets;
+    }
+
+    public Tweet findTweetById(long tweetId) {
+        return tweetRepository.findById(tweetId);
     }
 
     public List<Tweet> getTweetsByUserId(long userId) {
