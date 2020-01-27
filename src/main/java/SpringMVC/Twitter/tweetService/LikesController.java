@@ -20,18 +20,21 @@ public class LikesController {
         return likeService.getAllLikes();
     }
 
+    // Get count of likes for a tweet
     @RequestMapping("/likes/{tweetId}")
     public long getLikesCountForTweet(@PathVariable long tweetId) {
         return likeService.getLikesCountForTweet(tweetId);
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/likes/{userId}/{tweetId}")
-    public boolean registerLikeForTweetByUser(@PathVariable long userId, @PathVariable long tweetId) {
-        return likeService.registerLikeForTweetByUser(userId, tweetId);
+    // Register like for a tweet by a user
+    @RequestMapping(method = RequestMethod.POST, value = "/likes/{tweetId}/{userId}")
+    public boolean registerLikeForTweetByUser(@PathVariable long tweetId, @PathVariable long userId) {
+        return likeService.registerLikeForTweetByUser(tweetId, userId);
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, value = "/likes/{userId}/{tweetId}")
-    public boolean removeLikeForTweetByUser(@PathVariable long userId, @PathVariable long tweetId) {
-        return likeService.removeLikeForTweetByUser(userId, tweetId);
+    // Remove like for a tweet by a user
+    @RequestMapping(method = RequestMethod.DELETE, value = "/likes/{tweetId}/{userId}")
+    public boolean deleteLikeForTweetByUser(@PathVariable long tweetId, @PathVariable long userId) {
+        return likeService.deleteLikeForTweetByUser(tweetId, userId);
     }
 }

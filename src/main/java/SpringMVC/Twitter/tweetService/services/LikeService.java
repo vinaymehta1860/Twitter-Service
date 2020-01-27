@@ -29,7 +29,7 @@ public class LikeService {
         return likeRepository.countLikesByTweetId(tweetId);
     }
 
-    public boolean registerLikeForTweetByUser(long userId, long tweetId) {
+    public boolean registerLikeForTweetByUser(long tweetId, long userId) {
         User user = userService.findUserById(userId);
         Tweet tweet = tweetService.findTweetById(tweetId);
 
@@ -46,7 +46,14 @@ public class LikeService {
         }
     }
 
-    public boolean removeLikeForTweetByUser(long userId, long tweetId) {
-        return likeRepository.removeLikeByTweetIdAndUserId(userId, tweetId);
+    public boolean deleteLikeForTweetByUser(long tweetId, long userId) {
+        try {
+            long likeId = likeRepository.findByTweetIdAndUserId(tweetId, userId).getId();
+            likeRepository.deleteById(likeId);
+            return true;
+        } catch(Exception e) {
+            System.out.println("Exception: " + e.toString());
+            return false;
+        }
     }
 }

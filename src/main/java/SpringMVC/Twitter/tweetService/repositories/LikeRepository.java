@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface LikeRepository extends CrudRepository<Like, Long> {
-    long countLikesByTweetId(long tweetId);
+    Like findByTweetIdAndUserId(long tweetId, long userId);
 
-    boolean removeLikeByTweetIdAndUserId(long userId, long tweetId);
+    long countLikesByTweetId(long tweetId);
 }
