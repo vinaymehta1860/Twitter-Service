@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TweetService {
@@ -56,8 +55,9 @@ public class TweetService {
             tweetToUpdate.setContent(tweet.getContent());
             tweetRepository.save(tweetToUpdate);
             return tweetToUpdate;
-        } else
-            return null;
+        }
+
+        return null;
     }
 
     public boolean removeTweet(long userId, long tweetId) {
