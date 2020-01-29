@@ -1,3 +1,10 @@
+/*
+This is a Comment object. It has 4 properties
+1) id       <long>    unique identifier of comment
+2) tweetId  <long>    unique identifier of comment
+3) userId   <long>    unique identifier of comment
+4) comment  <String>  comment itself
+ */
 package SpringMVC.Twitter.tweetService.models;
 
 import SpringMVC.Twitter.userService.models.User;
@@ -42,6 +49,7 @@ public class Comment implements Serializable {
         this.setTweet(tweet);
         this.setUser(user);
         this.setComment(comment);
+        this.setDate();
     }
 
     public long getId() {
@@ -80,7 +88,7 @@ public class Comment implements Serializable {
         return date;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setDate() {
+        this.date = new Date();
     }
 }

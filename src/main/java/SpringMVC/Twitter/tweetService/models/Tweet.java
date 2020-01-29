@@ -1,3 +1,10 @@
+/*
+This is a Tweet object. It has 4 properties
+1) id       <long>      unique identifier of tweet
+2) title    <String>    title of tweet
+3) content  <String>    content of the tweet
+4) date     <Date>      date when tweet was created
+ */
 package SpringMVC.Twitter.tweetService.models;
 
 import SpringMVC.Twitter.userService.models.User;
@@ -60,6 +67,7 @@ public class Tweet implements Serializable {
 
     public void setContent(String content) {
         this.content = content;
+
     }
 
     public void setDate() {

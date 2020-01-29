@@ -1,3 +1,9 @@
+/*
+This is a Like object. It contains 3 properties described as follows:
+1) id       <long>  unique identifier of the like
+2) tweetId  <long>  id of the tweet that is liked
+3) userId   <long>  id of the user who liked the tweet
+ */
 package SpringMVC.Twitter.tweetService.models;
 
 import SpringMVC.Twitter.userService.models.User;

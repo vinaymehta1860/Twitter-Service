@@ -23,6 +23,10 @@ public class TweetService {
         return tweets;
     }
 
+    public Tweet findTweetById(long tweetId) {
+        return tweetRepository.findById(tweetId);
+    }
+
     public List<Tweet> getTweetsByUserId(long userId) {
         List<Tweet> tweets = new ArrayList<>();
         tweetRepository.findAllByUserId(userId).forEach(tweet -> tweets.add(tweet));
@@ -51,8 +55,9 @@ public class TweetService {
             tweetToUpdate.setContent(tweet.getContent());
             tweetRepository.save(tweetToUpdate);
             return tweetToUpdate;
-        } else
-            return null;
+        }
+
+        return null;
     }
 
     public boolean removeTweet(long userId, long tweetId) {
