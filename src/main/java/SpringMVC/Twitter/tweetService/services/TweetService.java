@@ -1,9 +1,11 @@
 package SpringMVC.Twitter.tweetService.services;
 
+import SpringMVC.Twitter.tweetService.dtos.tweets.TweetsDTO;
 import SpringMVC.Twitter.tweetService.models.Tweet;
 import SpringMVC.Twitter.tweetService.repositories.TweetRepository;
 import SpringMVC.Twitter.userService.UserService;
 import SpringMVC.Twitter.userService.models.User;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +19,13 @@ public class TweetService {
     @Autowired
     UserService userService;
 
-    public List<Tweet> findAllTweets() {
-        List<Tweet> tweets = new ArrayList<>();
-        tweetRepository.findAll().forEach(tweet -> tweets.add(tweet));
+    public List<TweetsDTO> findAllTweets() {
+        List<TweetsDTO> tweets = new ArrayList<>();
+        ModelMapper modelMapper = new ModelMapper();
+        tweetRepository.findAll().forEach(tweet -> {
+            TweetsDTO tweetsDTO = modelMapper.map(tweet, TweetsDTO.class);
+            tweets.add(tweetsDTO);
+        });
         return tweets;
     }
 

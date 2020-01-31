@@ -8,6 +8,7 @@ import SpringMVC.Twitter.userService.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Hashtable;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -30,6 +31,18 @@ public class CommentService {
     // Get all comments for a tweet
     public List<Comment> getAllCommentsForTweet(long tweetId) {
         return commentRepository.getAllCommentsByTweetId(tweetId);
+    }
+
+    // Get all comments for a list of tweets
+    public Hashtable<Long, List<Comment>> getAllCommentsForTweets(long[] tweetIds) {
+        Hashtable<Long, List<Comment>> comments = new Hashtable<>();
+
+        for (long tweetId : tweetIds) {
+            List<Comment> comment = getAllCommentsForTweet(tweetId);
+            comments.put(tweetId, comment);
+        }
+
+        return comments;
     }
 
     // Add comment
