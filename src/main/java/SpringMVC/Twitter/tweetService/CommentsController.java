@@ -1,8 +1,13 @@
 package SpringMVC.Twitter.tweetService;
 
+import SpringMVC.Twitter.tweetService.DTO.CommentDTO;
 import SpringMVC.Twitter.tweetService.models.Comment;
 import SpringMVC.Twitter.tweetService.services.CommentService;
+import SpringMVC.Twitter.tweetService.services.GraphQLService;
+import graphql.ExecutionResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,16 +20,18 @@ import java.util.List;
 public class CommentsController {
     @Autowired
     CommentService commentService;
+    @Autowired
+    GraphQLService graphQLService;
 
     // This API is never supposed to be used on the client side. This is just for testing purposes
     @RequestMapping("/comments")
-    public List<Comment> getAllComments() {
+    public List<CommentDTO> getAllComments() {
         return commentService.getAllComments();
     }
 
     // Get all comments for a tweet
     @RequestMapping("/comments/{tweetId}")
-    public List<Comment> getAllCommentsForTweet(@PathVariable long tweetId) {
+    public List<CommentDTO> getAllCommentsForTweet(@PathVariable long tweetId) {
         return commentService.getAllCommentsForTweet(tweetId);
     }
 
@@ -44,5 +51,11 @@ public class CommentsController {
     @RequestMapping(method = RequestMethod.DELETE, value = "/comments/{commentId}")
     public boolean removeCommentForTweet(@PathVariable long commentId) {
         return commentService.removeCommentForTweet(commentId);
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/graphql/comments")
+    public ResponseEntity<Object> getComments(@RequestBody String query) {
+        ExecutionResult execute = graphQLService.getGraphQL().execute(query);
+        return new ResponseEntity<>(execute, HttpStatus.OK);
     }
 }

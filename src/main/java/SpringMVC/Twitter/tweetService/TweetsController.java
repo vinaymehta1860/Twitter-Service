@@ -1,10 +1,15 @@
 package SpringMVC.Twitter.tweetService;
 
+import SpringMVC.Twitter.tweetService.DTO.TweetDTO;
 import SpringMVC.Twitter.tweetService.models.Tweet;
 import SpringMVC.Twitter.tweetService.services.CommentService;
+import SpringMVC.Twitter.tweetService.services.GraphQLService;
 import SpringMVC.Twitter.tweetService.services.LikeService;
 import SpringMVC.Twitter.tweetService.services.TweetService;
+import graphql.ExecutionResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,15 +22,19 @@ import java.util.List;
 public class TweetsController {
 
     @Autowired
+    TweetDTO tweetDTO;
+    @Autowired
     TweetService tweetService;
     @Autowired
     LikeService likeService;
     @Autowired
     CommentService commentService;
+    @Autowired
+    GraphQLService graphQLService;
 
     // This API is just for testing and should never be used on client side
     @RequestMapping("/tweets")
-    public List<Tweet> getAllTweets() {
+    public List<TweetDTO> getAllTweets() {
         return tweetService.findAllTweets();
     }
 
@@ -52,5 +61,11 @@ public class TweetsController {
     @RequestMapping(method = RequestMethod.DELETE, value = "/tweets/{userId}/{tweetId}")
     public boolean removeTweet(@PathVariable long userId, @PathVariable long tweetId) {
         return tweetService.removeTweet(userId, tweetId);
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/graphql/tweets")
+    public ResponseEntity<Object> getTweets(@RequestBody String query) {
+        ExecutionResult execute = graphQLService.getGraphQL().execute(query);
+        return new ResponseEntity<>(execute, HttpStatus.OK);
     }
 }

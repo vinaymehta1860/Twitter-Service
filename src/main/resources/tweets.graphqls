@@ -1,0 +1,29 @@
+schema {
+    query: Query
+}
+
+type Query {
+    tweets: [Tweet]
+    tweet(id: ID): Tweet
+    likes: [Like]
+    comments: [Comment]
+}
+
+type Tweet {
+    id: ID
+    title: String
+    content: String
+    owner: String
+    likes: Int
+    comments: [Comment]
+}
+
+type Like {
+    id: ID
+}
+
+type Comment {
+    id: ID
+    comment: String
+    owner: String
+}

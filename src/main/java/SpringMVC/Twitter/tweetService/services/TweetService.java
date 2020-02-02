@@ -1,7 +1,10 @@
 package SpringMVC.Twitter.tweetService.services;
 
+import SpringMVC.Twitter.tweetService.DTO.CommentDTO;
+import SpringMVC.Twitter.tweetService.DTO.TweetDTO;
 import SpringMVC.Twitter.tweetService.models.Tweet;
 import SpringMVC.Twitter.tweetService.repositories.TweetRepository;
+import SpringMVC.Twitter.userService.DTO.UserDTO;
 import SpringMVC.Twitter.userService.UserService;
 import SpringMVC.Twitter.userService.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,13 +16,31 @@ import java.util.List;
 @Service
 public class TweetService {
     @Autowired
+    TweetDTO tweetDTO;
+    @Autowired
     TweetRepository tweetRepository;
+    @Autowired
+    LikeService likeService;
+    @Autowired
+    CommentService commentService;
     @Autowired
     UserService userService;
 
-    public List<Tweet> findAllTweets() {
-        List<Tweet> tweets = new ArrayList<>();
-        tweetRepository.findAll().forEach(tweet -> tweets.add(tweet));
+    public List<TweetDTO> findAllTweets() {
+        List<TweetDTO> tweets = new ArrayList<>();
+
+        tweetRepository.findAll().forEach(tweet -> {
+            // Get the UserDTO for this tweet
+            UserDTO userDTO = userService.getUserDTOById(tweet.getUser().getId());
+            // Get the likes count for this tweet
+            long likesCountForTweet = likeService.getLikesCountForTweet(tweet.getId());
+            // Get all the comments for this tweet
+            List<CommentDTO> commentDTOS = commentService.getAllCommentsForTweet(tweet.getId());
+            // Create the tweet DTO to be sent back
+            TweetDTO tweetToAdd = new TweetDTO(tweet.getId(), tweet.getTitle(), tweet.getContent(), userDTO.getFirstname() + " " + userDTO.getLastname(), likesCountForTweet, commentDTOS);
+            tweets.add(tweetToAdd);
+        });
+
         return tweets;
     }
 
@@ -38,7 +59,7 @@ public class TweetService {
     }
 
     public Tweet addTweet(long userId, Tweet tweet) {
-        User user = userService.findUserById(userId);
+        User user = userService.getUserObjectById(userId);
         Tweet tweetToAdd = new Tweet(tweet.getTitle(), tweet.getContent(), user);
         tweetToAdd = tweetRepository.save(tweetToAdd);
         if (tweetToAdd != null)
