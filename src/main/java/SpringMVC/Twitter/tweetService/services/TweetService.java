@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -24,48 +25,50 @@ public class TweetService {
     @Autowired
     UserService userService;
 
+    // Get a list of all tweets (NOT TO USED BY CLIENTS)
     public List<TweetDTO> getAllTweets() {
-        List<TweetDTO> tweets = new ArrayList<>();
+        List<Tweet> tweets = (List<Tweet>) tweetRepository.findAll();
 
-        tweetRepository.findAll().forEach(tweet -> {
-            // Get the UserDTO for this tweet
-            UserDTO userDTO = userService.getUserDTOById(tweet.getUser().getId());
-            // Get the likes count for this tweet
-            long likesCountForTweet = likeService.getLikesCountForTweet(tweet.getId());
-            // Get all the comments for this tweet
-            List<CommentDTO> commentDTOS = commentService.getAllCommentsForTweet(tweet.getId());
-            // Create the tweet DTO to be sent back
-            TweetDTO tweetToAdd = new TweetDTO(tweet.getId(), tweet.getTitle(), tweet.getContent(), userDTO.getFirstname() + " " + userDTO.getLastname(), likesCountForTweet, commentDTOS);
-            tweets.add(tweetToAdd);
-        });
-
-        return tweets;
+        return convertTweetObjectsToDTOList(tweets);
     }
 
-    public Tweet findTweetById(long tweetId) {
+    // Get a tweet by it's id (NOT TO USED BY CLIENTS)
+    public TweetDTO getTweetById(long tweetId) {
+        Tweet tweet = tweetRepository.findById(tweetId);
+
+        return convertTweetObjectsToDTOList(Arrays.asList(tweet)).get(0);
+    }
+
+    // Get tweet entity object by id (NOT TO USED BY CLIENTS)
+    public Tweet getTweetObjectById(long tweetId) {
         return tweetRepository.findById(tweetId);
     }
 
-    public List<Tweet> getTweetsByUserId(long userId) {
-        List<Tweet> tweets = new ArrayList<>();
-        tweetRepository.findAllByUserId(userId).forEach(tweet -> tweets.add(tweet));
-        return tweets;
+    // Get list of tweets for a user
+    public List<TweetDTO> getTweetsByUserId(long userId) {
+        List<Tweet> tweets = tweetRepository.findAllByUserId(userId);
+
+        return convertTweetObjectsToDTOList(tweets);
     }
 
+    // Get a tweet by it's id for a user
     public Tweet getUserTweetById(long userId, long tweetId) {
         return tweetRepository.findAllByUserIdAndId(userId, tweetId);
     }
 
+    // Add a tweet
     public Tweet addTweet(long userId, Tweet tweet) {
         User user = userService.getUserObjectById(userId);
         Tweet tweetToAdd = new Tweet(tweet.getTitle(), tweet.getContent(), user);
         tweetToAdd = tweetRepository.save(tweetToAdd);
+
         if (tweetToAdd != null)
             return tweetToAdd;
         else
             return null;
     }
 
+    // Update a tweet
     public Tweet updateUserTweet(long userId, long tweetId, Tweet tweet) {
         Tweet tweetToUpdate = getUserTweetById(userId, tweetId);
 
@@ -79,6 +82,7 @@ public class TweetService {
         return null;
     }
 
+    // Remove a tweet
     public boolean removeTweet(long userId, long tweetId) {
         Tweet tweetToRemove = getUserTweetById(userId, tweetId);
 
@@ -87,5 +91,28 @@ public class TweetService {
             return true;
         } else
             return false;
+    }
+
+    /*
+     * Private Utility methods
+     */
+
+    // Function to convert Tweet Entity Objects to List of TweetDTOs
+    public List<TweetDTO> convertTweetObjectsToDTOList(List<Tweet> tweets) {
+        List<TweetDTO> tweetDTOS = new ArrayList<>();
+
+        for (Tweet tweet : tweets) {
+            // Get the UserDTO for this tweet
+            UserDTO userDTO = userService.getUserDTOById(tweet.getUser().getId());
+            // Get the likes count for this tweet
+            long likesCountForTweet = likeService.getCountOfLikesForTweet(tweet.getId());
+            // Get all the comments for this tweet
+            List<CommentDTO> commentDTOS = commentService.getAllCommentsForTweet(tweet.getId());
+            // Create the tweet DTO to be sent back
+            TweetDTO tweetDTO = new TweetDTO(tweet.getId(), tweet.getTitle(), tweet.getContent(), userDTO.getFirstname() + " " + userDTO.getLastname(), likesCountForTweet, commentDTOS);
+            tweetDTOS.add(tweetDTO);
+        }
+
+        return tweetDTOS;
     }
 }

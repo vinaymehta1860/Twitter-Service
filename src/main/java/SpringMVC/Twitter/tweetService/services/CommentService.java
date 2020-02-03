@@ -61,7 +61,7 @@ public class CommentService {
     // Add comment
     public Comment addCommentForTweet(Comment commentToAdd, long tweetId, long userId) {
         User user = userService.getUserObjectById(userId);
-        Tweet tweet = tweetService.findTweetById(tweetId);
+        Tweet tweet = tweetService.getTweetObjectById(tweetId);
 
         if (user != null && tweet != null) {
             Comment comment = new Comment(tweet, user, commentToAdd.getComment());

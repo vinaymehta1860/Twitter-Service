@@ -30,27 +30,27 @@ public class TweetsController {
         return tweetService.getAllTweets();
     }
 
-    @RequestMapping("/tweets/{userId}")
-    public List<Tweet> getTweetsByUserId(@PathVariable long userId) {
+    @RequestMapping("users/{userId}/tweets")
+    public List<TweetDTO> getAllTweetsForUser(@PathVariable long userId) {
         return tweetService.getTweetsByUserId(userId);
     }
 
-    @RequestMapping("/tweets/{userId}/{tweetId}")
-    public Tweet getUserTweetsById(@PathVariable long userId, @PathVariable long tweetId) {
+    @RequestMapping("users/{userId}/tweets/{tweetId}")
+    public Tweet getUserTweetById(@PathVariable long userId, @PathVariable long tweetId) {
         return tweetService.getUserTweetById(userId, tweetId);
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/tweets/{userId}")
+    @RequestMapping(method = RequestMethod.POST, value = "/users/{userId}/tweets")
     public Tweet addTweet(@RequestBody Tweet tweet, @PathVariable long userId) {
         return tweetService.addTweet(userId, tweet);
     }
 
-    @RequestMapping(method = RequestMethod.PUT, value = "/tweets/{userId}/{tweetId}")
+    @RequestMapping(method = RequestMethod.PUT, value = "users/{userId}/tweets/{tweetId}")
     public Tweet updateTweet(@PathVariable long userId, @PathVariable long tweetId, @RequestBody Tweet tweet) {
         return tweetService.updateUserTweet(userId, tweetId, tweet);
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, value = "/tweets/{userId}/{tweetId}")
+    @RequestMapping(method = RequestMethod.DELETE, value = "users/{userId}/tweets/{tweetId}")
     public boolean removeTweet(@PathVariable long userId, @PathVariable long tweetId) {
         return tweetService.removeTweet(userId, tweetId);
     }
