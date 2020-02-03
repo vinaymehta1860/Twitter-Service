@@ -1,5 +1,6 @@
 package SpringMVC.Twitter.userService;
 
+import SpringMVC.Twitter.userService.DTO.UserDTO;
 import SpringMVC.Twitter.userService.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,14 +13,23 @@ public class UserService {
     @Autowired
     UserRepository userRepository;
 
-    public List<User> findAllUsers() {
-        List<User> users = new ArrayList<>();
-        userRepository.findAll().forEach(user -> users.add(user));
+    public List<UserDTO> findAllUsers() {
+        List<UserDTO> users = new ArrayList<>();
+        userRepository.findAll().forEach(user -> {
+            UserDTO userDTO = new UserDTO(user.getId(), user.getFirstname(), user.getLastname(), user.getEmail());
+            users.add(userDTO);
+        });
         return users;
     }
 
-    public User findUserById(long id) {
-        return userRepository.findById(id);
+    public User getUserObjectById(long id) {
+        return userRepository.findUserById(id);
+    }
+
+    public UserDTO getUserDTOById(long id) {
+        User user = userRepository.findUserById(id);
+        UserDTO userDTO = new UserDTO(user.getId(), user.getFirstname(), user.getLastname(), user.getEmail());
+        return userDTO;
     }
 
     public User addUser(User user) {

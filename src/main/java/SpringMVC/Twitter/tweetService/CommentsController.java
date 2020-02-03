@@ -1,5 +1,6 @@
 package SpringMVC.Twitter.tweetService;
 
+import SpringMVC.Twitter.tweetService.DTO.CommentDTO;
 import SpringMVC.Twitter.tweetService.models.Comment;
 import SpringMVC.Twitter.tweetService.services.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,30 +19,30 @@ public class CommentsController {
 
     // This API is never supposed to be used on the client side. This is just for testing purposes
     @RequestMapping("/comments")
-    public List<Comment> getAllComments() {
+    public List<CommentDTO> getAllComments() {
         return commentService.getAllComments();
     }
 
     // Get all comments for a tweet
-    @RequestMapping("/comments/{tweetId}")
-    public List<Comment> getAllCommentsForTweet(@PathVariable long tweetId) {
+    @RequestMapping("/users/tweets/{tweetId}/comments")
+    public List<CommentDTO> getAllCommentsForTweet(@PathVariable long tweetId) {
         return commentService.getAllCommentsForTweet(tweetId);
     }
 
     // Add comment for a tweet
-    @RequestMapping(method = RequestMethod.POST, value = "/comments/{tweetId}/{userId}")
+    @RequestMapping(method = RequestMethod.POST, value = "users/{userId}/tweets/{tweetId}/comments")
     public Comment addCommentForTweet(@RequestBody Comment comment, @PathVariable long tweetId, @PathVariable long userId) {
         return commentService.addCommentForTweet(comment, tweetId, userId);
     }
 
     // Update comment
-    @RequestMapping(method = RequestMethod.PUT, value = "/comments/{commentId}")
+    @RequestMapping(method = RequestMethod.PUT, value = "/users/tweets/comments/{commentId}")
     public Comment updateCommentForTweet(@RequestBody Comment comment, @PathVariable long commentId) {
         return commentService.updateCommentForTweet(comment, commentId);
     }
 
     // Remove comment
-    @RequestMapping(method = RequestMethod.DELETE, value = "/comments/{commentId}")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/users/tweets/comments/{commentId}")
     public boolean removeCommentForTweet(@PathVariable long commentId) {
         return commentService.removeCommentForTweet(commentId);
     }
