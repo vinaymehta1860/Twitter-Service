@@ -1,5 +1,6 @@
 package SpringMVC.Twitter.tweetService;
 
+import SpringMVC.Twitter.tweetService.DTO.TweetDTO;
 import SpringMVC.Twitter.tweetService.models.Tweet;
 import SpringMVC.Twitter.tweetService.services.CommentService;
 import SpringMVC.Twitter.tweetService.services.LikeService;
@@ -25,8 +26,8 @@ public class TweetsController {
 
     // This API is just for testing and should never be used on client side
     @RequestMapping("/tweets")
-    public List<Tweet> getAllTweets() {
-        return tweetService.findAllTweets();
+    public List<TweetDTO> getAllTweets() {
+        return tweetService.getAllTweets();
     }
 
     @RequestMapping("/tweets/{userId}")

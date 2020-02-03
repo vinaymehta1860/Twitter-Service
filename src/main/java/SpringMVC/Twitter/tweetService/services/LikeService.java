@@ -8,6 +8,7 @@ import SpringMVC.Twitter.userService.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 
 @Service
@@ -19,18 +20,33 @@ public class LikeService {
     @Autowired
     TweetService tweetService;
 
+    // Get all likes
     public List<Like> getAllLikes() {
         List<Like> likes = new ArrayList<>();
         likeRepository.findAll().forEach(like -> likes.add(like));
         return likes;
     }
 
+    // Get the count of likes for a tweet
     public long getLikesCountForTweet(long tweetId) {
         return likeRepository.countLikesByTweetId(tweetId);
     }
 
+    // Get number of likes for list of tweets
+    public Hashtable<Long, Long> getLikesCountForTweets(long[] tweetIds) {
+        Hashtable<Long, Long> likes = new Hashtable<>();
+
+        for (long tweetId : tweetIds) {
+            long likesCountForTweet = getLikesCountForTweet(tweetId);
+            likes.put(tweetId, likesCountForTweet);
+        }
+
+        return likes;
+    }
+
+    // Add like for a tweet
     public boolean registerLikeForTweetByUser(long tweetId, long userId) {
-        User user = userService.findUserById(userId);
+        User user = userService.getUserObjectById(userId);
         Tweet tweet = tweetService.findTweetById(tweetId);
 
         if (user != null && tweet != null) {
@@ -46,6 +62,7 @@ public class LikeService {
         }
     }
 
+    // Remove like for a tweet
     public boolean deleteLikeForTweetByUser(long tweetId, long userId) {
         try {
             long likeId = likeRepository.findByTweetIdAndUserId(tweetId, userId).getId();

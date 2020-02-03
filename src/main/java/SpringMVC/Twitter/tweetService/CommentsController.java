@@ -1,5 +1,6 @@
 package SpringMVC.Twitter.tweetService;
 
+import SpringMVC.Twitter.tweetService.DTO.CommentDTO;
 import SpringMVC.Twitter.tweetService.models.Comment;
 import SpringMVC.Twitter.tweetService.services.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,13 +19,13 @@ public class CommentsController {
 
     // This API is never supposed to be used on the client side. This is just for testing purposes
     @RequestMapping("/comments")
-    public List<Comment> getAllComments() {
+    public List<CommentDTO> getAllComments() {
         return commentService.getAllComments();
     }
 
     // Get all comments for a tweet
     @RequestMapping("/comments/{tweetId}")
-    public List<Comment> getAllCommentsForTweet(@PathVariable long tweetId) {
+    public List<CommentDTO> getAllCommentsForTweet(@PathVariable long tweetId) {
         return commentService.getAllCommentsForTweet(tweetId);
     }
 
