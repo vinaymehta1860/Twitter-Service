@@ -1,8 +1,8 @@
 /*
 This is a Comment object. It has 4 properties
 1) id       <long>    unique identifier of comment
-2) tweetId  <long>    unique identifier of comment
-3) userId   <long>    unique identifier of comment
+2) tweetId  <Tweet>   Tweet object on which comment is made
+3) userId   <User>    User object who commented on this tweet
 4) comment  <String>  comment itself
  */
 package SpringMVC.Twitter.tweetService.models;
