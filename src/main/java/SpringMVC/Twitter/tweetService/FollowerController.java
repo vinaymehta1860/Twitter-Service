@@ -16,10 +16,10 @@ public class FollowerController {
     @Autowired
     FollowerService followerService;
 
-    // Get a list of followers for a user
+    // Get a list of followees for a user
     @RequestMapping("/tweets/followers/{followeeId}")
-    public List<UserDTO> getFollowersForAUser(@PathVariable long followeeId) {
-        return followerService.getFollowersForUser(followeeId);
+    public List<UserDTO> getFolloweesForUser(@PathVariable long followeeId) {
+        return followerService.getFolloweesForUser(followeeId);
     }
 
     // Check if user A follows user B

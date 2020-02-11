@@ -32,7 +32,7 @@ public class TweetsController {
 
     @RequestMapping("users/{userId}/tweets")
     public List<TweetDTO> getAllTweetsForUser(@PathVariable long userId) {
-        return tweetService.getTweetsByUserId(userId);
+        return tweetService.getTweetsForUser(userId);
     }
 
     @RequestMapping("users/{userId}/tweets/{tweetId}")

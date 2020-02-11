@@ -20,7 +20,13 @@ public class FollowerService {
 
     // Get a list of followers for a particular user
     public List<UserDTO> getFollowersForUser(long followeeId) {
-        List<Follower> followers = followerRepository.findAllByFolloweeId(followeeId);
+        List<Follower> followers = followerRepository.findAllByFollowerId(followeeId);
+        return convertFollowerObjectsToFolloweesObject(followers);
+    }
+
+    // Get a list of users that follow a user
+    public List<UserDTO> getFolloweesForUser(long followerId) {
+        List<Follower> followers = followerRepository.findAllByFolloweeId(followerId);
         return convertFollowerObjectsToUserDTOs(followers);
     }
 
@@ -66,6 +72,18 @@ public class FollowerService {
 
         for (Follower follower : followers) {
             UserDTO userDTO = new UserDTO(follower.getFollower().getId(), follower.getFollower().getFirstname(), follower.getFollower().getLastname(), follower.getFollower().getEmail());
+            userDTOS.add(userDTO);
+        }
+
+        return userDTOS;
+    }
+
+    // Convert a list of Followers to followee
+    public List<UserDTO> convertFollowerObjectsToFolloweesObject(List<Follower> followers) {
+        List<UserDTO> userDTOS = new ArrayList<>();
+
+        for (Follower follower : followers) {
+            UserDTO userDTO = new UserDTO(follower.getFollowee().getId(), follower.getFollowee().getFirstname(), follower.getFollowee().getLastname(), follower.getFollowee().getEmail());
             userDTOS.add(userDTO);
         }
 

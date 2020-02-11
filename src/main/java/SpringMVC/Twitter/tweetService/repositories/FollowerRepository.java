@@ -11,6 +11,8 @@ public interface FollowerRepository extends CrudRepository<Follower, Long> {
 
     List<Follower> findAllByFolloweeId(long followeeId);
 
+    List<Follower> findAllByFollowerId(long followerId);
+
     Follower findByFolloweeIdAndFollowerId(long followeeId, long followerId);
 
     boolean existsByFolloweeIdAndFollowerId(long followeeId, long followerId);

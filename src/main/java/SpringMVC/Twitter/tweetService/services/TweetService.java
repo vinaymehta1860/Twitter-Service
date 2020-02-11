@@ -19,6 +19,8 @@ public class TweetService {
     @Autowired
     TweetRepository tweetRepository;
     @Autowired
+    FollowerService followerService;
+    @Autowired
     LikeService likeService;
     @Autowired
     CommentService commentService;
@@ -45,10 +47,17 @@ public class TweetService {
     }
 
     // Get list of tweets for a user
-    public List<TweetDTO> getTweetsByUserId(long userId) {
-        List<Tweet> tweets = tweetRepository.findAllByUserId(userId);
+    public List<TweetDTO> getTweetsForUser(long userId) {
+        List<TweetDTO> tweetDTOS = new ArrayList<>();
 
-        return convertTweetObjectsToDTOList(tweets);
+        List<UserDTO> followers = followerService.getFollowersForUser(userId);
+
+        followers.forEach(follower -> {
+            List<TweetDTO> tweets = getTweetsByUser(follower.getId());
+            tweetDTOS.addAll(tweets);
+        });
+
+        return tweetDTOS;
     }
 
     // Get a tweet by it's id for a user
@@ -96,6 +105,13 @@ public class TweetService {
     /*
      * Private Utility methods
      */
+
+    // Get list of tweets for a user
+    public List<TweetDTO> getTweetsByUser(long userId) {
+        List<Tweet> tweets = tweetRepository.findAllByUserId(userId);
+
+        return convertTweetObjectsToDTOList(tweets);
+    }
 
     // Function to convert Tweet Entity Objects to List of TweetDTOs
     public List<TweetDTO> convertTweetObjectsToDTOList(List<Tweet> tweets) {
