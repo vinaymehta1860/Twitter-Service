@@ -4,6 +4,7 @@ import SpringMVC.Twitter.tweetService.DTO.CommentDTO;
 import SpringMVC.Twitter.tweetService.DTO.TweetDTO;
 import SpringMVC.Twitter.tweetService.models.Tweet;
 import SpringMVC.Twitter.tweetService.repositories.TweetRepository;
+import SpringMVC.Twitter.tweetService.utility.Validation;
 import SpringMVC.Twitter.userService.DTO.UserDTO;
 import SpringMVC.Twitter.userService.UserService;
 import SpringMVC.Twitter.userService.models.User;
@@ -26,8 +27,10 @@ public class TweetService {
     CommentService commentService;
     @Autowired
     UserService userService;
+    @Autowired
+    Validation validation;
 
-    // Get a list of all tweets (NOT TO USED BY CLIENTS)
+    // Get a list of all tweets (NOT TO BE USED BY CLIENTS)
     public List<TweetDTO> getAllTweets() {
         List<Tweet> tweets = (List<Tweet>) tweetRepository.findAll();
 
@@ -102,6 +105,11 @@ public class TweetService {
             return false;
     }
 
+    // Validate session token
+    public boolean validateToken(long userId, String token) {
+        return validation.validateSessionToken(userId, token);
+    }
+
     /*
      * Private Utility methods
      */
@@ -125,7 +133,7 @@ public class TweetService {
             // Get all the comments for this tweet
             List<CommentDTO> commentDTOS = commentService.getAllCommentsForTweet(tweet.getId());
             // Create the tweet DTO to be sent back
-            TweetDTO tweetDTO = new TweetDTO(tweet.getId(), tweet.getTitle(), tweet.getContent(), userDTO.getFirstname() + " " + userDTO.getLastname(), likesCountForTweet, commentDTOS);
+            TweetDTO tweetDTO = new TweetDTO(tweet.getId(), tweet.getTitle(), tweet.getContent(), userDTO.getFirstname() + " " + userDTO.getLastname(), userDTO.getId(), likesCountForTweet, commentDTOS);
             tweetDTOS.add(tweetDTO);
         }
 

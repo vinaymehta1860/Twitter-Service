@@ -48,7 +48,13 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-<!--		<dependency>-->
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>13.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <!--		<dependency>-->
 <!--			<groupId>javax</groupId>-->
 <!--			<artifactId>javaee-web-api</artifactId>-->
 <!--			<version>6.0</version>-->

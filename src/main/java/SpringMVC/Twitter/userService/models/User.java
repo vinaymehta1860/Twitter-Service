@@ -17,7 +17,8 @@ import java.util.Date;
 @Table(name = "users")
 public class User implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NotNull
+    @Column(name = "id")
     private long id;
 
     @NotNull
@@ -38,7 +39,8 @@ public class User implements Serializable {
 
     public User() { }
 
-    public User(String firstname, String lastname, String email) {
+    public User(long userId, String firstname, String lastname, String email) {
+        this.setId(userId);
         this.setFirstname(firstname);
         this.setLastname(lastname);
         this.setEmail(email);

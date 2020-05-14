@@ -25,17 +25,17 @@ public class TweetsController {
     CommentService commentService;
 
     // This API is just for testing and should never be used on client side
-    @RequestMapping("/tweets")
+    @RequestMapping("/users/tweets")
     public List<TweetDTO> getAllTweets() {
         return tweetService.getAllTweets();
     }
 
-    @RequestMapping("users/{userId}/tweets")
+    @RequestMapping("/users/{userId}/tweets")
     public List<TweetDTO> getAllTweetsForUser(@PathVariable long userId) {
         return tweetService.getTweetsForUser(userId);
     }
 
-    @RequestMapping("users/{userId}/tweets/{tweetId}")
+    @RequestMapping("/users/{userId}/tweets/{tweetId}")
     public Tweet getUserTweetById(@PathVariable long userId, @PathVariable long tweetId) {
         return tweetService.getUserTweetById(userId, tweetId);
     }
@@ -45,12 +45,12 @@ public class TweetsController {
         return tweetService.addTweet(userId, tweet);
     }
 
-    @RequestMapping(method = RequestMethod.PUT, value = "users/{userId}/tweets/{tweetId}")
+    @RequestMapping(method = RequestMethod.PUT, value = "/users/{userId}/tweets/{tweetId}")
     public Tweet updateTweet(@PathVariable long userId, @PathVariable long tweetId, @RequestBody Tweet tweet) {
         return tweetService.updateUserTweet(userId, tweetId, tweet);
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, value = "users/{userId}/tweets/{tweetId}")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/users/{userId}/tweets/{tweetId}")
     public boolean removeTweet(@PathVariable long userId, @PathVariable long tweetId) {
         return tweetService.removeTweet(userId, tweetId);
     }
