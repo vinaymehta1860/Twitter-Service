@@ -19,24 +19,24 @@ public class FollowerService {
     UserService userService;
 
     // Get a list of followers for a particular user
-    public List<UserDTO> getFollowersForUser(long followeeId) {
+    public List<UserDTO> getFollowersForUser(String followeeId) {
         List<Follower> followers = followerRepository.findAllByFollowerId(followeeId);
         return convertFollowerObjectsToFolloweesObject(followers);
     }
 
     // Get a list of users that follow a user
-    public List<UserDTO> getFolloweesForUser(long followerId) {
+    public List<UserDTO> getFolloweesForUser(String followerId) {
         List<Follower> followers = followerRepository.findAllByFolloweeId(followerId);
         return convertFollowerObjectsToUserDTOs(followers);
     }
 
     // Check if one person follows the other
-    public boolean doesUserAFollowsUserB(long userA, long userB) {
+    public boolean doesUserAFollowsUserB(String userA, String userB) {
         return followerRepository.existsByFolloweeIdAndFollowerId(userB, userA);
     }
 
     // Register a follower
-    public boolean registerFollower(long followerId, long followeeId) {
+    public boolean registerFollower(String followerId, String followeeId) {
         User followee = userService.getUserObjectById(followeeId);
         User follower = userService.getUserObjectById(followerId);
 
@@ -50,7 +50,7 @@ public class FollowerService {
     }
 
     // Remove a follower
-    public boolean removeFollower(long followerId, long followeeId) {
+    public boolean removeFollower(String followerId, String followeeId) {
         if (followerRepository.existsByFolloweeIdAndFollowerId(followerId, followeeId)) {
             Follower follower = followerRepository.findByFolloweeIdAndFollowerId(followeeId, followerId);
 

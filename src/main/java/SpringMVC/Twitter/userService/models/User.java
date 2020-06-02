@@ -19,7 +19,7 @@ public class User implements Serializable {
     @Id
     @NotNull
     @Column(name = "id")
-    private long id;
+    private String id;
 
     @NotNull
     @Column(name = "first_name")
@@ -39,7 +39,7 @@ public class User implements Serializable {
 
     public User() { }
 
-    public User(long userId, String firstname, String lastname, String email) {
+    public User(String userId, String firstname, String lastname, String email) {
         this.setId(userId);
         this.setFirstname(firstname);
         this.setLastname(lastname);
@@ -47,11 +47,11 @@ public class User implements Serializable {
         this.setDate();
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

@@ -18,25 +18,25 @@ public class FollowerController {
 
     // Get a list of followees for a user
     @RequestMapping("/tweets/followers/{followeeId}")
-    public List<UserDTO> getFolloweesForUser(@PathVariable long followeeId) {
+    public List<UserDTO> getFolloweesForUser(@PathVariable String followeeId) {
         return followerService.getFolloweesForUser(followeeId);
     }
 
     // Check if user A follows user B
     @RequestMapping("/tweets/followers/{followerId}/{followeeId}")
-    public boolean checkIfUserAFollowsUserB(@PathVariable long followerId, @PathVariable long followeeId) {
+    public boolean checkIfUserAFollowsUserB(@PathVariable String followerId, @PathVariable String followeeId) {
         return followerService.doesUserAFollowsUserB(followerId, followeeId);
     }
 
     // Register a follower request
     @RequestMapping(method = RequestMethod.POST, value = "/tweets/followers/{followerId}/{followeeId}")
-    public boolean registerFollowRequest(@PathVariable long followerId, @PathVariable long followeeId) {
+    public boolean registerFollowRequest(@PathVariable String followerId, @PathVariable String followeeId) {
         return followerService.registerFollower(followerId, followeeId);
     }
 
     // Remove a follower
     @RequestMapping(method = RequestMethod.DELETE, value = "/tweets/followers/{followerId}/{followeeId}")
-    public boolean removeFollowRequest(@PathVariable long followerId, @PathVariable long followeeId) {
+    public boolean removeFollowRequest(@PathVariable String followerId, @PathVariable String followeeId) {
         return followerService.removeFollower(followerId, followeeId);
     }
 }

@@ -4,7 +4,7 @@ import SpringMVC.Twitter.tweetService.DTO.CommentDTO;
 import SpringMVC.Twitter.tweetService.DTO.TweetDTO;
 import SpringMVC.Twitter.tweetService.models.Tweet;
 import SpringMVC.Twitter.tweetService.repositories.TweetRepository;
-import SpringMVC.Twitter.tweetService.utility.Validation;
+import SpringMVC.Twitter.tweetService.utility.JWTUtil;
 import SpringMVC.Twitter.userService.DTO.UserDTO;
 import SpringMVC.Twitter.userService.UserService;
 import SpringMVC.Twitter.userService.models.User;
@@ -28,7 +28,7 @@ public class TweetService {
     @Autowired
     UserService userService;
     @Autowired
-    Validation validation;
+    JWTUtil jwtUtil;
 
     // Get a list of all tweets (NOT TO BE USED BY CLIENTS)
     public List<TweetDTO> getAllTweets() {
@@ -50,26 +50,30 @@ public class TweetService {
     }
 
     // Get list of tweets for a user
-    public List<TweetDTO> getTweetsForUser(long userId) {
-        List<TweetDTO> tweetDTOS = new ArrayList<>();
+    public List<TweetDTO> getTweetsForUser(String userId, String token) {
+        if (jwtUtil.isAccessTokenValid(token, userId)) {
+            List<TweetDTO> tweetDTOS = new ArrayList<>();
 
-        List<UserDTO> followers = followerService.getFollowersForUser(userId);
+            List<UserDTO> followers = followerService.getFollowersForUser(userId);
 
-        followers.forEach(follower -> {
-            List<TweetDTO> tweets = getTweetsByUser(follower.getId());
-            tweetDTOS.addAll(tweets);
-        });
+            followers.forEach(follower -> {
+                List<TweetDTO> tweets = getTweetsByUser(follower.getId());
+                tweetDTOS.addAll(tweets);
+            });
 
-        return tweetDTOS;
+            return tweetDTOS;
+        } else {
+            return null;
+        }
     }
 
     // Get a tweet by it's id for a user
-    public Tweet getUserTweetById(long userId, long tweetId) {
+    public Tweet getUserTweetById(String userId, long tweetId) {
         return tweetRepository.findAllByUserIdAndId(userId, tweetId);
     }
 
     // Add a tweet
-    public Tweet addTweet(long userId, Tweet tweet) {
+    public Tweet addTweet(String userId, Tweet tweet) {
         User user = userService.getUserObjectById(userId);
         Tweet tweetToAdd = new Tweet(tweet.getTitle(), tweet.getContent(), user);
         tweetToAdd = tweetRepository.save(tweetToAdd);
@@ -81,7 +85,7 @@ public class TweetService {
     }
 
     // Update a tweet
-    public Tweet updateUserTweet(long userId, long tweetId, Tweet tweet) {
+    public Tweet updateUserTweet(String userId, long tweetId, Tweet tweet) {
         Tweet tweetToUpdate = getUserTweetById(userId, tweetId);
 
         if (tweetToUpdate != null) {
@@ -95,7 +99,7 @@ public class TweetService {
     }
 
     // Remove a tweet
-    public boolean removeTweet(long userId, long tweetId) {
+    public boolean removeTweet(String userId, long tweetId) {
         Tweet tweetToRemove = getUserTweetById(userId, tweetId);
 
         if (tweetToRemove != null) {
@@ -105,24 +109,19 @@ public class TweetService {
             return false;
     }
 
-    // Validate session token
-    public boolean validateToken(long userId, String token) {
-        return validation.validateSessionToken(userId, token);
-    }
-
     /*
      * Private Utility methods
      */
 
     // Get list of tweets for a user
-    public List<TweetDTO> getTweetsByUser(long userId) {
+    private List<TweetDTO> getTweetsByUser(String userId) {
         List<Tweet> tweets = tweetRepository.findAllByUserId(userId);
 
         return convertTweetObjectsToDTOList(tweets);
     }
 
     // Function to convert Tweet Entity Objects to List of TweetDTOs
-    public List<TweetDTO> convertTweetObjectsToDTOList(List<Tweet> tweets) {
+    private List<TweetDTO> convertTweetObjectsToDTOList(List<Tweet> tweets) {
         List<TweetDTO> tweetDTOS = new ArrayList<>();
 
         for (Tweet tweet : tweets) {

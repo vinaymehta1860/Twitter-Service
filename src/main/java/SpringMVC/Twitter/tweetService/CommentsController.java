@@ -31,7 +31,7 @@ public class CommentsController {
 
     // Add comment for a tweet
     @RequestMapping(method = RequestMethod.POST, value = "users/{userId}/tweets/{tweetId}/comments")
-    public Comment addCommentForTweet(@RequestBody Comment comment, @PathVariable long tweetId, @PathVariable long userId) {
+    public Comment addCommentForTweet(@RequestBody Comment comment, @PathVariable long tweetId, @PathVariable String userId) {
         return commentService.addCommentForTweet(comment, tweetId, userId);
     }
 

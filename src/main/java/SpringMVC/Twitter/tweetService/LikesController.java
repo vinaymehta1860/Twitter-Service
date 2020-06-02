@@ -35,13 +35,13 @@ public class LikesController {
 
     // Register like for a tweet by a user
     @RequestMapping(method = RequestMethod.POST, value = "/users/{userId}/tweets/{tweetId}/likes")
-    public boolean registerLikeForTweetByUser(@PathVariable long tweetId, @PathVariable long userId) {
+    public boolean registerLikeForTweetByUser(@PathVariable long tweetId, @PathVariable String userId) {
         return likeService.registerLikeForTweetByUser(tweetId, userId);
     }
 
     // Remove like for a tweet by a user
     @RequestMapping(method = RequestMethod.DELETE, value = "/users/{userId}/tweets/{tweetId}/likes")
-    public boolean deleteLikeForTweetByUser(@PathVariable long tweetId, @PathVariable long userId) {
+    public boolean deleteLikeForTweetByUser(@PathVariable long tweetId, @PathVariable String userId) {
         return likeService.deleteLikeForTweetByUser(tweetId, userId);
     }
 }

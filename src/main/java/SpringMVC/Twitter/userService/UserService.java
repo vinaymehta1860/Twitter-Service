@@ -24,12 +24,12 @@ public class UserService {
     }
 
     // Get a user by userId
-    public User getUserObjectById(long id) {
+    public User getUserObjectById(String id) {
         return userRepository.findUserById(id);
     }
 
     // Get a user by userId
-    public UserDTO getUserDTOById(long id) {
+    public UserDTO getUserDTOById(String id) {
         User user = userRepository.findUserById(id);
         UserDTO userDTO = new UserDTO(user.getId(), user.getFirstname(), user.getLastname(), user.getEmail());
         return userDTO;
@@ -38,7 +38,6 @@ public class UserService {
     // Add a user
     public User addUser(UserDTO user) {
         if(!userExistsById(user.getId()) && !userExistsByEmail(user.getEmail())) {
-            System.out.println("Adding user: " + user.toString());
             User userToAdd = new User(user.getId(), user.getFirstname(), user.getLastname(), user.getEmail());
             userRepository.save(userToAdd);
             return userToAdd;
@@ -47,7 +46,7 @@ public class UserService {
     }
 
     // Check if a user with userId exists or not
-    public boolean userExistsById(long userId) {
+    public boolean userExistsById(String userId) {
         return userRepository.existsById(userId);
     }
 
@@ -57,7 +56,7 @@ public class UserService {
     }
 
     // Remove a user
-    public boolean deleteUser(long userId) {
+    public boolean deleteUser(String userId) {
         if (userExistsById(userId)) {
             userRepository.deleteById(userId);
             return true;

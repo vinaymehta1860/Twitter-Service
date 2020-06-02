@@ -6,11 +6,7 @@ import SpringMVC.Twitter.tweetService.services.CommentService;
 import SpringMVC.Twitter.tweetService.services.LikeService;
 import SpringMVC.Twitter.tweetService.services.TweetService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,28 +26,33 @@ public class TweetsController {
         return tweetService.getAllTweets();
     }
 
+    // Get all tweets by a particular user
     @RequestMapping("/users/{userId}/tweets")
-    public List<TweetDTO> getAllTweetsForUser(@PathVariable long userId) {
-        return tweetService.getTweetsForUser(userId);
+    public List<TweetDTO> getAllTweetsForUser(@PathVariable String userId, @RequestHeader("Authorization") String token) {
+        return tweetService.getTweetsForUser(userId, token);
     }
 
+    // Get a particular tweet by a particular user
     @RequestMapping("/users/{userId}/tweets/{tweetId}")
-    public Tweet getUserTweetById(@PathVariable long userId, @PathVariable long tweetId) {
+    public Tweet getUserTweetById(@PathVariable String userId, @PathVariable long tweetId) {
         return tweetService.getUserTweetById(userId, tweetId);
     }
 
+    // Add a tweets by a user
     @RequestMapping(method = RequestMethod.POST, value = "/users/{userId}/tweets")
-    public Tweet addTweet(@RequestBody Tweet tweet, @PathVariable long userId) {
+    public Tweet addTweet(@RequestBody Tweet tweet, @PathVariable String userId) {
         return tweetService.addTweet(userId, tweet);
     }
 
+    // Update a tweet by a user
     @RequestMapping(method = RequestMethod.PUT, value = "/users/{userId}/tweets/{tweetId}")
-    public Tweet updateTweet(@PathVariable long userId, @PathVariable long tweetId, @RequestBody Tweet tweet) {
+    public Tweet updateTweet(@PathVariable String userId, @PathVariable long tweetId, @RequestBody Tweet tweet) {
         return tweetService.updateUserTweet(userId, tweetId, tweet);
     }
 
+    // Delete a tweet by a user
     @RequestMapping(method = RequestMethod.DELETE, value = "/users/{userId}/tweets/{tweetId}")
-    public boolean removeTweet(@PathVariable long userId, @PathVariable long tweetId) {
+    public boolean removeTweet(@PathVariable String userId, @PathVariable long tweetId) {
         return tweetService.removeTweet(userId, tweetId);
     }
 }

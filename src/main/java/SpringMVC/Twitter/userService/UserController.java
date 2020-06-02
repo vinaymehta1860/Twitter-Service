@@ -19,18 +19,17 @@ public class UserController {
     }
 
     @RequestMapping("/tweets/users/{id}")
-    public User getUser(@PathVariable long id) {
+    public User getUser(@PathVariable String id) {
         return userService.getUserObjectById(id);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/tweets/users")
     public User addUser(@RequestBody UserDTO user) {
-        System.out.println("User object received: " + user.toString());
         return userService.addUser(user);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/tweets/users/{userId}")
-    public boolean removeUser(@PathVariable long userId) {
+    public boolean removeUser(@PathVariable String userId) {
         return userService.deleteUser(userId);
     }
 

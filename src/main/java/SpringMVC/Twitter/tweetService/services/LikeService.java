@@ -59,7 +59,7 @@ public class LikeService {
     }
 
     // Add like for a tweet
-    public boolean registerLikeForTweetByUser(long tweetId, long userId) {
+    public boolean registerLikeForTweetByUser(long tweetId, String userId) {
         User user = userService.getUserObjectById(userId);
         Tweet tweet = tweetService.getTweetObjectById(tweetId);
 
@@ -77,7 +77,7 @@ public class LikeService {
     }
 
     // Remove like for a tweet
-    public boolean deleteLikeForTweetByUser(long tweetId, long userId) {
+    public boolean deleteLikeForTweetByUser(long tweetId, String userId) {
         try {
             long likeId = likeRepository.findByTweetIdAndUserId(tweetId, userId).getId();
             likeRepository.deleteById(likeId);

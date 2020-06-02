@@ -10,13 +10,13 @@ public class TweetDTO {
     private String title;
     private String content;
     private String owner_name;
-    private long owner_id;
+    private String owner_id;
     private long likes;
     private List<CommentDTO> comments;
 
     public TweetDTO() {}
 
-    public TweetDTO(long tweet_id, String title, String content, String owner_name, long owner_id, long likes, List<CommentDTO> comments) {
+    public TweetDTO(long tweet_id, String title, String content, String owner_name, String owner_id, long likes, List<CommentDTO> comments) {
         this.setTweet_id(tweet_id);
         this.setTitle(title);
         this.setContent(content);
@@ -74,11 +74,11 @@ public class TweetDTO {
         this.owner_name = owner_name;
     }
 
-    public long getOwner_id() {
+    public String getOwner_id() {
         return owner_id;
     }
 
-    public void setOwner_id(long owner_id) {
+    public void setOwner_id(String owner_id) {
         this.owner_id = owner_id;
     }
 }

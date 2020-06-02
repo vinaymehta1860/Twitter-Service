@@ -59,7 +59,7 @@ public class CommentService {
     }
 
     // Add comment
-    public Comment addCommentForTweet(Comment commentToAdd, long tweetId, long userId) {
+    public Comment addCommentForTweet(Comment commentToAdd, long tweetId, String userId) {
         User user = userService.getUserObjectById(userId);
         Tweet tweet = tweetService.getTweetObjectById(tweetId);
 
