@@ -9,9 +9,11 @@ import java.util.List;
 @Repository
 public interface FollowerRepository extends CrudRepository<Follower, Long> {
 
-    List<Follower> findAllByFolloweeId(long followeeId);
+    List<Follower> findAllByFolloweeId(String followeeId);
 
-    Follower findByFolloweeIdAndFollowerId(long followeeId, long followerId);
+    List<Follower> findAllByFollowerId(String followerId);
 
-    boolean existsByFolloweeIdAndFollowerId(long followeeId, long followerId);
+    Follower findByFolloweeIdAndFollowerId(String followeeId, String followerId);
+
+    boolean existsByFolloweeIdAndFollowerId(String followeeId, String followerId);
 }

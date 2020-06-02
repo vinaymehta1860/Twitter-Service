@@ -13,6 +13,7 @@ public class UserService {
     @Autowired
     UserRepository userRepository;
 
+    // Get a list of all users
     public List<UserDTO> findAllUsers() {
         List<UserDTO> users = new ArrayList<>();
         userRepository.findAll().forEach(user -> {
@@ -22,38 +23,50 @@ public class UserService {
         return users;
     }
 
-    public User getUserObjectById(long id) {
+    // Get a user by userId
+    public User getUserObjectById(String id) {
         return userRepository.findUserById(id);
     }
 
-    public UserDTO getUserDTOById(long id) {
+    // Get a user by userId
+    public UserDTO getUserDTOById(String id) {
         User user = userRepository.findUserById(id);
         UserDTO userDTO = new UserDTO(user.getId(), user.getFirstname(), user.getLastname(), user.getEmail());
         return userDTO;
     }
 
-    public User addUser(User user) {
+    // Add a user
+    public User addUser(UserDTO user) {
         if(!userExistsById(user.getId()) && !userExistsByEmail(user.getEmail())) {
-            User userToAdd = new User(user.getFirstname(), user.getLastname(), user.getEmail());
+            User userToAdd = new User(user.getId(), user.getFirstname(), user.getLastname(), user.getEmail());
             userRepository.save(userToAdd);
             return userToAdd;
         } else
             return null;
     }
 
-    public boolean userExistsById(long userId) {
+    // Check if a user with userId exists or not
+    public boolean userExistsById(String userId) {
         return userRepository.existsById(userId);
     }
 
+    // Check if user with email exists or not
     public boolean userExistsByEmail(String email) {
         return userRepository.existsByEmail((email));
     }
 
-    public boolean removeUser(long userId) {
+    // Remove a user
+    public boolean deleteUser(String userId) {
         if (userExistsById(userId)) {
             userRepository.deleteById(userId);
             return true;
         } else
             return false;
+    }
+
+    // Remove all users
+    public void deleteAllUsers() {
+        userRepository.deleteAll();
+        return;
     }
 }

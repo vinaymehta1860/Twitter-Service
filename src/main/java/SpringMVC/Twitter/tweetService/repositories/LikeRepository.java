@@ -13,7 +13,7 @@ public interface LikeRepository extends CrudRepository<Like, Long> {
 
     List<Like> findAllByTweetId(long tweetId);
 
-    Like findByTweetIdAndUserId(long tweetId, long userId);
+    Like findByTweetIdAndUserId(long tweetId, String userId);
 
     long countLikesByTweetId(long tweetId);
 }

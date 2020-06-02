@@ -6,30 +6,32 @@ import java.util.List;
 
 @Component
 public class TweetDTO {
-    private long id;
+    private long tweet_id;
     private String title;
     private String content;
-    private String owner;
+    private String owner_name;
+    private String owner_id;
     private long likes;
     private List<CommentDTO> comments;
 
     public TweetDTO() {}
 
-    public TweetDTO(long id, String title, String content, String owner, long likes, List<CommentDTO> comments) {
-        this.setId(id);
+    public TweetDTO(long tweet_id, String title, String content, String owner_name, String owner_id, long likes, List<CommentDTO> comments) {
+        this.setTweet_id(tweet_id);
         this.setTitle(title);
         this.setContent(content);
-        this.setOwner(owner);
+        this.setOwner_name(owner_name);
+        this.setOwner_id(owner_id);
         this.setLikes(likes);
         this.setComments(comments);
     }
 
-    public Long getId() {
-        return id;
+    public long getTweet_id() {
+        return tweet_id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setTweet_id(long tweet_id) {
+        this.tweet_id = tweet_id;
     }
 
     public String getTitle() {
@@ -64,11 +66,19 @@ public class TweetDTO {
         this.comments = comments;
     }
 
-    public String getOwner() {
-        return owner;
+    public String getOwner_name() {
+        return owner_name;
     }
 
-    public void setOwner(String owner) {
-        this.owner = owner;
+    public void setOwner_name(String owner_name) {
+        this.owner_name = owner_name;
+    }
+
+    public String getOwner_id() {
+        return owner_id;
+    }
+
+    public void setOwner_id(String owner_id) {
+        this.owner_id = owner_id;
     }
 }

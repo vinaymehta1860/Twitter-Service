@@ -6,12 +6,12 @@ import org.springframework.stereotype.Component;
 public class LikeDTO {
     private long id;
     private long tweetId;
-    private long userId;
+    private String userId;
     private String username;
 
     public LikeDTO() {}
 
-    public LikeDTO(long id, long tweetId, long userId, String username) {
+    public LikeDTO(long id, long tweetId, String userId, String username) {
         this.setId(id);
         this.setTweetId(tweetId);
         this.setUserId(userId);
@@ -34,11 +34,11 @@ public class LikeDTO {
         this.tweetId = tweetId;
     }
 
-    public long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

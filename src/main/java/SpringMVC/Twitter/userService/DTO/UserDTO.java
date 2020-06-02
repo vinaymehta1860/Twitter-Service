@@ -4,25 +4,25 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class UserDTO {
-    private long id;
+    private String id;
     private String firstname;
     private String lastname;
     private String email;
 
     public UserDTO() {}
 
-    public UserDTO(long id, String firstname, String lastname, String email) {
+    public UserDTO(String id, String firstname, String lastname, String email) {
         this.setId(id);
         this.setFirstname(firstname);
         this.setLastname(lastname);
         this.setEmail(email);
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

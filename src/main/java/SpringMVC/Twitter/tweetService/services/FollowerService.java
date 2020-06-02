@@ -19,18 +19,24 @@ public class FollowerService {
     UserService userService;
 
     // Get a list of followers for a particular user
-    public List<UserDTO> getFollowersForUser(long followeeId) {
-        List<Follower> followers = followerRepository.findAllByFolloweeId(followeeId);
+    public List<UserDTO> getFollowersForUser(String followeeId) {
+        List<Follower> followers = followerRepository.findAllByFollowerId(followeeId);
+        return convertFollowerObjectsToFolloweesObject(followers);
+    }
+
+    // Get a list of users that follow a user
+    public List<UserDTO> getFolloweesForUser(String followerId) {
+        List<Follower> followers = followerRepository.findAllByFolloweeId(followerId);
         return convertFollowerObjectsToUserDTOs(followers);
     }
 
     // Check if one person follows the other
-    public boolean doesUserAFollowsUserB(long userA, long userB) {
+    public boolean doesUserAFollowsUserB(String userA, String userB) {
         return followerRepository.existsByFolloweeIdAndFollowerId(userB, userA);
     }
 
     // Register a follower
-    public boolean registerFollower(long followerId, long followeeId) {
+    public boolean registerFollower(String followerId, String followeeId) {
         User followee = userService.getUserObjectById(followeeId);
         User follower = userService.getUserObjectById(followerId);
 
@@ -44,7 +50,7 @@ public class FollowerService {
     }
 
     // Remove a follower
-    public boolean removeFollower(long followerId, long followeeId) {
+    public boolean removeFollower(String followerId, String followeeId) {
         if (followerRepository.existsByFolloweeIdAndFollowerId(followerId, followeeId)) {
             Follower follower = followerRepository.findByFolloweeIdAndFollowerId(followeeId, followerId);
 
@@ -66,6 +72,18 @@ public class FollowerService {
 
         for (Follower follower : followers) {
             UserDTO userDTO = new UserDTO(follower.getFollower().getId(), follower.getFollower().getFirstname(), follower.getFollower().getLastname(), follower.getFollower().getEmail());
+            userDTOS.add(userDTO);
+        }
+
+        return userDTOS;
+    }
+
+    // Convert a list of Followers to followee
+    public List<UserDTO> convertFollowerObjectsToFolloweesObject(List<Follower> followers) {
+        List<UserDTO> userDTOS = new ArrayList<>();
+
+        for (Follower follower : followers) {
+            UserDTO userDTO = new UserDTO(follower.getFollowee().getId(), follower.getFollowee().getFirstname(), follower.getFollowee().getLastname(), follower.getFollowee().getEmail());
             userDTOS.add(userDTO);
         }
 
