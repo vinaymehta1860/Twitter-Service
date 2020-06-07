@@ -50,8 +50,8 @@ public class TweetService {
     }
 
     // Get list of tweets for a user
-    public List<TweetDTO> getTweetsForUser(String userId, String token) {
-        if (jwtUtil.isAccessTokenValid(token, userId)) {
+    public List<TweetDTO> getTweetsForUser(String userId, String access_token) {
+        if (jwtUtil.isAccessTokenValid(access_token, userId)) {
             List<TweetDTO> tweetDTOS = new ArrayList<>();
 
             List<UserDTO> followers = followerService.getFollowersForUser(userId);
@@ -68,45 +68,61 @@ public class TweetService {
     }
 
     // Get a tweet by it's id for a user
-    public Tweet getUserTweetById(String userId, long tweetId) {
-        return tweetRepository.findAllByUserIdAndId(userId, tweetId);
+    public Tweet getUserTweetById(String userId, long tweetId, String access_token) {
+        if (jwtUtil.isAccessTokenValid(access_token, userId)) {
+            return tweetRepository.findAllByUserIdAndId(userId, tweetId);
+        } else {
+            return null;
+        }
     }
 
     // Add a tweet
-    public Tweet addTweet(String userId, Tweet tweet) {
-        User user = userService.getUserObjectById(userId);
-        Tweet tweetToAdd = new Tweet(tweet.getTitle(), tweet.getContent(), user);
-        tweetToAdd = tweetRepository.save(tweetToAdd);
+    public Tweet addTweet(String userId, Tweet tweet, String access_token) {
+        if (jwtUtil.isAccessTokenValid(access_token, userId)) {
+            User user = userService.getUserObjectById(userId);
+            Tweet tweetToAdd = new Tweet(tweet.getTitle(), tweet.getContent(), user);
+            tweetToAdd = tweetRepository.save(tweetToAdd);
 
-        if (tweetToAdd != null)
-            return tweetToAdd;
-        else
+            if (tweetToAdd != null)
+                return tweetToAdd;
+            else
+                return null;
+        } else {
             return null;
+        }
     }
 
     // Update a tweet
-    public Tweet updateUserTweet(String userId, long tweetId, Tweet tweet) {
-        Tweet tweetToUpdate = getUserTweetById(userId, tweetId);
+    public Tweet updateUserTweet(String userId, long tweetId, Tweet tweet, String access_token) {
+        if (jwtUtil.isAccessTokenValid(access_token, userId)) {
+            Tweet tweetToUpdate = tweetRepository.findAllByUserIdAndId(userId, tweetId);
 
-        if (tweetToUpdate != null) {
-            tweetToUpdate.setTitle(tweet.getTitle());
-            tweetToUpdate.setContent(tweet.getContent());
-            tweetRepository.save(tweetToUpdate);
-            return tweetToUpdate;
+            if (tweetToUpdate != null) {
+                tweetToUpdate.setTitle(tweet.getTitle());
+                tweetToUpdate.setContent(tweet.getContent());
+                tweetRepository.save(tweetToUpdate);
+                return tweetToUpdate;
+            }
+
+            return null;
+        } else {
+            return null;
         }
-
-        return null;
     }
 
     // Remove a tweet
-    public boolean removeTweet(String userId, long tweetId) {
-        Tweet tweetToRemove = getUserTweetById(userId, tweetId);
+    public boolean removeTweet(String userId, long tweetId, String access_token) {
+        if (jwtUtil.isAccessTokenValid(access_token, userId)) {
+            Tweet tweetToRemove = tweetRepository.findAllByUserIdAndId(userId, tweetId);
 
-        if (tweetToRemove != null) {
-            tweetRepository.deleteById(tweetToRemove.getId());
-            return true;
-        } else
+            if (tweetToRemove != null) {
+                tweetRepository.deleteById(tweetToRemove.getId());
+                return true;
+            } else
+                return false;
+        } else {
             return false;
+        }
     }
 
     /*
