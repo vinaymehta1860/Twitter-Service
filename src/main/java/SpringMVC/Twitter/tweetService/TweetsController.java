@@ -32,31 +32,51 @@ public class TweetsController {
     // Get all tweets by a particular user
     @RequestMapping("/users/{userId}/tweets")
     public List<TweetDTO> getAllTweetsForUser(@PathVariable String userId, @RequestHeader("Authorization") String access_token) {
-        return tweetService.getTweetsForUser(userId, access_token);
+        if (jwtUtil.isAccessTokenValid(access_token, userId)) {
+            return tweetService.getTweetsForUser(userId);
+        } else {
+            return null;
+        }
     }
 
     // Get a particular tweet by a particular user
     @RequestMapping("/users/{userId}/tweets/{tweetId}")
     public Tweet getUserTweetById(@PathVariable String userId, @PathVariable long tweetId, @RequestHeader("Authorization") String access_token) {
-        return tweetService.getUserTweetById(userId, tweetId, access_token);
+        if (jwtUtil.isAccessTokenValid(access_token, userId)) {
+            return tweetService.getUserTweetById(userId, tweetId);
+        } else {
+            return null;
+        }
     }
 
     // Add a tweet by a user
     @RequestMapping(method = RequestMethod.POST, value = "/users/{userId}/tweets")
     public Tweet addTweet(@RequestBody Tweet tweet, @PathVariable String userId, @RequestHeader("Authorization") String access_token) {
-        return tweetService.addTweet(userId, tweet, access_token);
+        if (jwtUtil.isAccessTokenValid(access_token, userId)) {
+            return tweetService.addTweet(userId, tweet);
+        } else {
+            return null;
+        }
     }
 
     // Update a tweet by a user
     @RequestMapping(method = RequestMethod.PUT, value = "/users/{userId}/tweets/{tweetId}")
     public Tweet updateTweet(@PathVariable String userId, @PathVariable long tweetId, @RequestBody Tweet tweet, @RequestHeader("Authorization") String access_token) {
-        return tweetService.updateUserTweet(userId, tweetId, tweet, access_token);
+        if (jwtUtil.isAccessTokenValid(access_token, userId)) {
+            return tweetService.updateUserTweet(userId, tweetId, tweet);
+        } else {
+            return null;
+        }
     }
 
     // Delete a tweet by a user
     @RequestMapping(method = RequestMethod.DELETE, value = "/users/{userId}/tweets/{tweetId}")
     public boolean removeTweet(@PathVariable String userId, @PathVariable long tweetId, @RequestHeader("Authorization") String access_token) {
-        return tweetService.removeTweet(userId, tweetId, access_token);
+        if (jwtUtil.isAccessTokenValid(access_token, userId)) {
+            return tweetService.removeTweet(userId, tweetId);
+        } else {
+            return false;
+        }
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/validateToken/{userId}")
