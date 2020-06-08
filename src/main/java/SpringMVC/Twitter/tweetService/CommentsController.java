@@ -3,12 +3,9 @@ package SpringMVC.Twitter.tweetService;
 import SpringMVC.Twitter.tweetService.DTO.CommentDTO;
 import SpringMVC.Twitter.tweetService.models.Comment;
 import SpringMVC.Twitter.tweetService.services.CommentService;
+import SpringMVC.Twitter.tweetService.utility.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -16,6 +13,8 @@ import java.util.List;
 public class CommentsController {
     @Autowired
     CommentService commentService;
+    @Autowired
+    JWTUtil jwtUtil;
 
     // This API is never supposed to be used on the client side. This is just for testing purposes
     @RequestMapping("/comments")
@@ -24,26 +23,42 @@ public class CommentsController {
     }
 
     // Get all comments for a tweet
-    @RequestMapping("/users/tweets/{tweetId}/comments")
-    public List<CommentDTO> getAllCommentsForTweet(@PathVariable long tweetId) {
-        return commentService.getAllCommentsForTweet(tweetId);
+    @RequestMapping("/users/{userId}/tweets/{tweetId}/comments")
+    public List<CommentDTO> getAllCommentsForTweet(@PathVariable String userId, @PathVariable long tweetId, @RequestHeader("Authorization") String access_token) {
+        if (jwtUtil.isAccessTokenValid(access_token, userId)) {
+            return commentService.getAllCommentsForTweet(tweetId);
+        } else {
+            return null;
+        }
     }
 
     // Add comment for a tweet
     @RequestMapping(method = RequestMethod.POST, value = "users/{userId}/tweets/{tweetId}/comments")
-    public Comment addCommentForTweet(@RequestBody Comment comment, @PathVariable long tweetId, @PathVariable String userId) {
-        return commentService.addCommentForTweet(comment, tweetId, userId);
+    public Comment addCommentForTweet(@PathVariable String userId, @PathVariable long tweetId, @RequestBody Comment comment, @RequestHeader("Authorization") String access_token) {
+        if (jwtUtil.isAccessTokenValid(access_token, userId)) {
+            return commentService.addCommentForTweet(comment, tweetId, userId);
+        } else {
+            return null;
+        }
     }
 
     // Update comment
-    @RequestMapping(method = RequestMethod.PUT, value = "/users/tweets/comments/{commentId}")
-    public Comment updateCommentForTweet(@RequestBody Comment comment, @PathVariable long commentId) {
-        return commentService.updateCommentForTweet(comment, commentId);
+    @RequestMapping(method = RequestMethod.PUT, value = "/users/{userId}/tweets/comments/{commentId}")
+    public Comment updateCommentForTweet(@PathVariable String userId, @PathVariable long commentId, @RequestBody Comment comment, @RequestHeader("Authorization") String access_token) {
+        if (jwtUtil.isAccessTokenValid(access_token, userId)) {
+            return commentService.updateCommentForTweet(comment, commentId);
+        } else {
+            return null;
+        }
     }
 
     // Remove comment
-    @RequestMapping(method = RequestMethod.DELETE, value = "/users/tweets/comments/{commentId}")
-    public boolean removeCommentForTweet(@PathVariable long commentId) {
-        return commentService.removeCommentForTweet(commentId);
+    @RequestMapping(method = RequestMethod.DELETE, value = "/users/{userId}/tweets/comments/{commentId}")
+    public boolean removeCommentForTweet(@PathVariable String userId, @PathVariable long commentId, @RequestHeader("Authorization") String access_token) {
+        if (jwtUtil.isAccessTokenValid(access_token, userId)) {
+            return commentService.removeCommentForTweet(commentId);
+        } else {
+            return false;
+        }
     }
 }

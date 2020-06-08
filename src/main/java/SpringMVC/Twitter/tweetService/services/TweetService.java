@@ -4,7 +4,6 @@ import SpringMVC.Twitter.tweetService.DTO.CommentDTO;
 import SpringMVC.Twitter.tweetService.DTO.TweetDTO;
 import SpringMVC.Twitter.tweetService.models.Tweet;
 import SpringMVC.Twitter.tweetService.repositories.TweetRepository;
-import SpringMVC.Twitter.tweetService.utility.JWTUtil;
 import SpringMVC.Twitter.userService.DTO.UserDTO;
 import SpringMVC.Twitter.userService.UserService;
 import SpringMVC.Twitter.userService.models.User;
@@ -27,8 +26,6 @@ public class TweetService {
     CommentService commentService;
     @Autowired
     UserService userService;
-    @Autowired
-    JWTUtil jwtUtil;
 
     // Get a list of all tweets (NOT TO BE USED BY CLIENTS)
     public List<TweetDTO> getAllTweets() {
@@ -50,21 +47,17 @@ public class TweetService {
     }
 
     // Get list of tweets for a user
-    public List<TweetDTO> getTweetsForUser(String userId, String token) {
-        if (jwtUtil.isAccessTokenValid(token, userId)) {
-            List<TweetDTO> tweetDTOS = new ArrayList<>();
+    public List<TweetDTO> getTweetsForUser(String userId) {
+        List<TweetDTO> tweetDTOS = new ArrayList<>();
 
-            List<UserDTO> followers = followerService.getFollowersForUser(userId);
+        List<UserDTO> followers = followerService.getFollowersForUser(userId);
 
-            followers.forEach(follower -> {
-                List<TweetDTO> tweets = getTweetsByUser(follower.getId());
-                tweetDTOS.addAll(tweets);
-            });
+        followers.forEach(follower -> {
+            List<TweetDTO> tweets = getTweetsByUser(follower.getId());
+            tweetDTOS.addAll(tweets);
+        });
 
-            return tweetDTOS;
-        } else {
-            return null;
-        }
+        return tweetDTOS;
     }
 
     // Get a tweet by it's id for a user
@@ -86,7 +79,7 @@ public class TweetService {
 
     // Update a tweet
     public Tweet updateUserTweet(String userId, long tweetId, Tweet tweet) {
-        Tweet tweetToUpdate = getUserTweetById(userId, tweetId);
+        Tweet tweetToUpdate = tweetRepository.findAllByUserIdAndId(userId, tweetId);
 
         if (tweetToUpdate != null) {
             tweetToUpdate.setTitle(tweet.getTitle());
@@ -100,7 +93,7 @@ public class TweetService {
 
     // Remove a tweet
     public boolean removeTweet(String userId, long tweetId) {
-        Tweet tweetToRemove = getUserTweetById(userId, tweetId);
+        Tweet tweetToRemove = tweetRepository.findAllByUserIdAndId(userId, tweetId);
 
         if (tweetToRemove != null) {
             tweetRepository.deleteById(tweetToRemove.getId());

@@ -31,7 +31,7 @@ public class LikeService {
     }
 
     // Get all the users who have liked a tweet
-    public List<UserDTO> getUsersWhoHaveLikedATweet(long tweetId) {
+    public List<UserDTO> getUsersWhoHaveLikedATweet(String userId, long tweetId) {
         List<UserDTO> userDTOS = new ArrayList<>();
 
         likeRepository.findAllByTweetId(tweetId).forEach(like -> {
@@ -46,20 +46,8 @@ public class LikeService {
         return likeRepository.countLikesByTweetId(tweetId);
     }
 
-    // Get number of likes for list of tweets
-    public Hashtable<Long, Long> getLikesCountForTweets(long[] tweetIds) {
-        Hashtable<Long, Long> likes = new Hashtable<>();
-
-        for (long tweetId : tweetIds) {
-            long likesCountForTweet = getCountOfLikesForTweet(tweetId);
-            likes.put(tweetId, likesCountForTweet);
-        }
-
-        return likes;
-    }
-
     // Add like for a tweet
-    public boolean registerLikeForTweetByUser(long tweetId, String userId) {
+    public boolean registerLikeForTweetByUser(String userId, long tweetId) {
         User user = userService.getUserObjectById(userId);
         Tweet tweet = tweetService.getTweetObjectById(tweetId);
 
@@ -77,12 +65,12 @@ public class LikeService {
     }
 
     // Remove like for a tweet
-    public boolean deleteLikeForTweetByUser(long tweetId, String userId) {
+    public boolean deleteLikeForTweetByUser(String userId, long tweetId) {
         try {
             long likeId = likeRepository.findByTweetIdAndUserId(tweetId, userId).getId();
             likeRepository.deleteById(likeId);
             return true;
-        } catch(Exception e) {
+        } catch (Exception e) {
             System.out.println("Exception: " + e.toString());
             return false;
         }

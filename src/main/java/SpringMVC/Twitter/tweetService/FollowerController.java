@@ -1,13 +1,10 @@
 package SpringMVC.Twitter.tweetService;
 
-import SpringMVC.Twitter.tweetService.models.Follower;
 import SpringMVC.Twitter.tweetService.services.FollowerService;
+import SpringMVC.Twitter.tweetService.utility.JWTUtil;
 import SpringMVC.Twitter.userService.DTO.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -15,28 +12,46 @@ import java.util.List;
 public class FollowerController {
     @Autowired
     FollowerService followerService;
+    @Autowired
+    JWTUtil jwtUtil;
 
-    // Get a list of followees for a user
-    @RequestMapping("/tweets/followers/{followeeId}")
-    public List<UserDTO> getFolloweesForUser(@PathVariable String followeeId) {
-        return followerService.getFolloweesForUser(followeeId);
+    // Get list of users who this user follows
+    @RequestMapping("/users/{userId}/tweets/followers")
+    public List<UserDTO> getFolloweesForUser(@PathVariable String userId, @RequestHeader("Authorization") String access_token) {
+        if (jwtUtil.isAccessTokenValid(access_token, userId)) {
+            return followerService.getFolloweesForUser(userId);
+        } else {
+            return null;
+        }
     }
 
     // Check if user A follows user B
-    @RequestMapping("/tweets/followers/{followerId}/{followeeId}")
-    public boolean checkIfUserAFollowsUserB(@PathVariable String followerId, @PathVariable String followeeId) {
-        return followerService.doesUserAFollowsUserB(followerId, followeeId);
+    @RequestMapping("/users/{userId}/tweets/followers/{followeeId}")
+    public boolean checkIfUserAFollowsUserB(@PathVariable String userId, @PathVariable String followeeId, @RequestHeader("Authorization") String access_token) {
+        if (jwtUtil.isAccessTokenValid(access_token, userId)) {
+            return followerService.doesUserAFollowsUserB(userId, followeeId);
+        } else {
+            return false;
+        }
     }
 
-    // Register a follower request
-    @RequestMapping(method = RequestMethod.POST, value = "/tweets/followers/{followerId}/{followeeId}")
-    public boolean registerFollowRequest(@PathVariable String followerId, @PathVariable String followeeId) {
-        return followerService.registerFollower(followerId, followeeId);
+    // Register a follow request
+    @RequestMapping(method = RequestMethod.POST, value = "/users/{userId}/tweets/followers/{followeeId}")
+    public boolean registerFollowRequest(@PathVariable String userId, @PathVariable String followeeId, @RequestHeader("Authorization") String access_token) {
+        if (jwtUtil.isAccessTokenValid(access_token, userId)) {
+            return followerService.registerFollower(userId, followeeId);
+        } else {
+            return false;
+        }
     }
 
     // Remove a follower
-    @RequestMapping(method = RequestMethod.DELETE, value = "/tweets/followers/{followerId}/{followeeId}")
-    public boolean removeFollowRequest(@PathVariable String followerId, @PathVariable String followeeId) {
-        return followerService.removeFollower(followerId, followeeId);
+    @RequestMapping(method = RequestMethod.DELETE, value = "/users/{userId}/tweets/followers/{followeeId}")
+    public boolean removeFollowRequest(@PathVariable String userId, @PathVariable String followeeId, @RequestHeader("Authorization") String access_token) {
+        if (jwtUtil.isAccessTokenValid(access_token, userId)) {
+            return followerService.removeFollower(userId, followeeId);
+        } else {
+            return false;
+        }
     }
 }
